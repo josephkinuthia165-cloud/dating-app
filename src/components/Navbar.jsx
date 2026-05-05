@@ -1,21 +1,26 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
-import { useAuth } from '../context/AuthContext';
-import { FiUser, FiLogOut, FiHeart, FiMenu, FiX } from 'react-icons/fi';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
+import { useAuth } from "../context/AuthContext";
+import { FiUser, FiLogOut, FiHeart, FiMenu, FiX } from "react-icons/fi";
 
-const Navbar = ({ onGenderFilter, onLocationFilter, activeGender, activeLocation }) => {
+const Navbar = ({
+  onGenderFilter,
+  onLocationFilter,
+  activeGender,
+  activeLocation,
+}) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/');
+    navigate("/");
   };
 
-  const genders = ['All', 'Male', 'Female', 'Trans'];
-  const locations = ['All', 'Nairobi', 'Mombasa', 'Kisumu'];
+  const genders = ["All", "Male", "Female", "Trans"];
+  const locations = ["All", "Nairobi", "Mombasa", "Kisumu"];
 
   return (
     <nav className="navbar">
@@ -29,37 +34,49 @@ const Navbar = ({ onGenderFilter, onLocationFilter, activeGender, activeLocation
           {menuOpen ? <FiX /> : <FiMenu />}
         </button>
 
-        <div className={`nav-center ${menuOpen ? 'open' : ''}`}>
-          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>Home</Link>
+        <div className={`nav-center ${menuOpen ? "open" : ""}`}>
+          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
 
+          {/* Gender Dropdown */}
           <div className="filter-group">
-            <span className="filter-label">Gender</span>
-            <div className="filter-pills">
-              {genders.map(g => (
-                <button
-                  key={g}
-                  className={`pill ${activeGender === g ? 'active' : ''}`}
-                  onClick={() => { onGenderFilter(g); setMenuOpen(false); }}
-                >
+            <label className="filter-label">Gender</label>
+
+            <select
+              className="filter-dropdown"
+              value={activeGender}
+              onChange={(e) => {
+                onGenderFilter(e.target.value);
+                setMenuOpen(false);
+              }}
+            >
+              {genders.map((g) => (
+                <option key={g} value={g}>
                   {g}
-                </button>
+                </option>
               ))}
-            </div>
+            </select>
           </div>
 
+          {/* Location Dropdown */}
           <div className="filter-group">
-            <span className="filter-label">Location</span>
-            <div className="filter-pills">
-              {locations.map(l => (
-                <button
-                  key={l}
-                  className={`pill ${activeLocation === l ? 'active' : ''}`}
-                  onClick={() => { onLocationFilter(l); setMenuOpen(false); }}
-                >
+            <label className="filter-label">Location</label>
+
+            <select
+              className="filter-dropdown"
+              value={activeLocation}
+              onChange={(e) => {
+                onLocationFilter(e.target.value);
+                setMenuOpen(false);
+              }}
+            >
+              {locations.map((l) => (
+                <option key={l} value={l}>
                   {l}
-                </button>
+                </option>
               ))}
-            </div>
+            </select>
           </div>
         </div>
 
@@ -75,8 +92,12 @@ const Navbar = ({ onGenderFilter, onLocationFilter, activeGender, activeLocation
             </>
           ) : (
             <>
-              <Link to="/login" className="btn-ghost">Login</Link>
-              <Link to="/signup" className="btn-primary">Sign Up</Link>
+              <Link to="/login" className="btn-ghost">
+                Login
+              </Link>
+              <Link to="/signup" className="btn-primary">
+                Sign Up
+              </Link>
             </>
           )}
         </div>
