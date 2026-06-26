@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { useAuth } from "../context/AuthContext";
-import { FiUser, FiLogOut, FiHeart, FiMenu, FiX } from "react-icons/fi";
+import { useAuth } from "../context/useAuth";
+import {
+  FiUser,
+  FiLogOut,
+  FiHeart,
+  FiMenu,
+  FiX,
+  FiShield,
+} from "react-icons/fi";
 
 const Navbar = ({
   onGenderFilter,
@@ -10,7 +17,7 @@ const Navbar = ({
   activeGender,
   activeLocation,
 }) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -83,6 +90,11 @@ const Navbar = ({
         <div className="nav-right">
           {user ? (
             <>
+              {isAdmin && (
+                <Link to="/admin" className="admin-nav-btn" title="Admin Panel">
+                  <FiShield /> <span>Admin</span>
+                </Link>
+              )}
               <Link to="/dashboard" className="profile-btn" title="Dashboard">
                 <FiUser />
               </Link>
