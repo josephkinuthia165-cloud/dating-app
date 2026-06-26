@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient';
-import ProfileCard from '../components/ProfileCard';
-import { FiHeart, FiLoader } from 'react-icons/fi';
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
+import ProfileCard from "../components/ProfileCard";
+import { FiHeart } from "react-icons/fi";
 
+// ── Home Page ──────────────────────────────────────────────
 const Home = ({ genderFilter, locationFilter }) => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,24 +17,30 @@ const Home = ({ genderFilter, locationFilter }) => {
     setLoading(true);
     setError(null);
     try {
-      let query = supabase.from('profiles').select('*').order('created_at', { ascending: false });
+      let query = supabase
+        .from("profiles")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
 
-      if (genderFilter && genderFilter !== 'All') {
-        query = query.ilike('gender', genderFilter);
+      if (genderFilter && genderFilter !== "All") {
+        query = query.ilike("gender", genderFilter);
       }
-      if (locationFilter && locationFilter !== 'All') {
-        query = query.ilike('location', locationFilter);
+      if (locationFilter && locationFilter !== "All") {
+        query = query.ilike("location", `%${locationFilter}%`);
       }
 
       const { data, error } = await query;
       if (error) throw error;
       setProfiles(data || []);
     } catch (err) {
-      setError('Failed to load profiles. Please try again.');
+      setError("Failed to load profiles. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const activeFilters = genderFilter !== "All" || locationFilter !== "All";
 
   return (
     <main className="home-page">
@@ -49,11 +56,13 @@ const Home = ({ genderFilter, locationFilter }) => {
       <section className="profiles-section">
         <div className="section-header">
           <h2>
-            {genderFilter !== 'All' || locationFilter !== 'All'
-              ? `Showing: ${genderFilter !== 'All' ? genderFilter : ''} ${locationFilter !== 'All' ? `in ${locationFilter}` : ''}`
-              : 'Featured Profiles'}
+            {activeFilters
+              ? `Showing: ${genderFilter !== "All" ? genderFilter : ""}${genderFilter !== "All" && locationFilter !== "All" ? " " : ""}${locationFilter !== "All" ? `in ${locationFilter}` : ""}`
+              : "Featured Profiles"}
           </h2>
-          <span className="profile-count">{profiles.length} profiles</span>
+          <div className="section-header-right">
+            <span className="profile-count">{profiles.length} profiles</span>
+          </div>
         </div>
 
         {loading ? (
@@ -64,17 +73,23 @@ const Home = ({ genderFilter, locationFilter }) => {
         ) : error ? (
           <div className="error-state">
             <p>{error}</p>
-            <button onClick={fetchProfiles} className="btn-primary">Retry</button>
+            <button onClick={fetchProfiles} className="btn-primary">
+              Retry
+            </button>
           </div>
         ) : profiles.length === 0 ? (
           <div className="empty-state">
             <FiHeart className="empty-icon" />
             <h3>No profiles found</h3>
-            <p>Try adjusting your filters</p>
+            <p>
+              {activeFilters
+                ? "Try a different location or filter"
+                : "No approved profiles yet"}
+            </p>
           </div>
         ) : (
           <div className="profiles-grid">
-            {profiles.map(profile => (
+            {profiles.map((profile) => (
               <ProfileCard key={profile.id} profile={profile} />
             ))}
           </div>

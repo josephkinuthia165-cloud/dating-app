@@ -380,16 +380,21 @@ const Dashboard = () => {
               <label>
                 <FiMapPin /> Location
               </label>
-              <select
+              <input
+                type="text"
+                placeholder="e.g. Nairobi,westlands"
                 value={form.location}
-                onChange={(e) => setForm({ ...form, location: e.target.value })}
+                onChange={(e) => {
+                  // sanitize: strip special characters, allow only letters, spaces, commas, hyphens
+                  const sanitized = e.target.value.replace(
+                    /[^a-zA-Z\s,'-]/g,
+                    "",
+                  );
+                  setForm({ ...form, location: sanitized });
+                }}
+                maxLength={100}
                 required
-              >
-                <option value="">Select city</option>
-                {LOCATIONS.map((l) => (
-                  <option key={l}>{l}</option>
-                ))}
-              </select>
+              />
             </div>
             <div className="form-group full-width">
               <label>
