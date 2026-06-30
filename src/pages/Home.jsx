@@ -46,8 +46,12 @@ const Home = ({ genderFilter, locationFilter }) => {
     <main className="home-page">
       <section className="hero">
         <div className="hero-content">
+          <h1 className="hero-title">
+            Mombasa escorts | Coast sex girls | Nairobi hot escorts
+          </h1>
           <p className="hero-subtitle">
-            Discover genuine connections with real people near you
+            Find escorts near you | sexy nairobi girls | discreete escort
+            services in Kenya{" "}
           </p>
         </div>
         <div className="hero-bg" />
@@ -58,10 +62,10 @@ const Home = ({ genderFilter, locationFilter }) => {
           <h2>
             {activeFilters
               ? `Showing: ${genderFilter !== "All" ? genderFilter : ""}${genderFilter !== "All" && locationFilter !== "All" ? " " : ""}${locationFilter !== "All" ? `in ${locationFilter}` : ""}`
-              : "Featured Profiles"}
+              : "All Profiles"}
           </h2>
           <div className="section-header-right">
-            <span className="profile-count">{profiles.length} profiles</span>
+            <span className="profile-count"></span>
           </div>
         </div>
 
