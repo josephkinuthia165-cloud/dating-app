@@ -125,7 +125,7 @@ const Navbar = ({
       <div className="nav-container">
         <Link to="/" className="nav-brand">
           <FiHeart className="brand-icon" />
-          <span>CoastEscorts</span>
+          <span>Coast Escorts</span>
         </Link>
 
         <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
